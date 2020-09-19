@@ -1,0 +1,48 @@
+div.planing {
+  div.container-scroll {
+    overflow-x: auto;
+  }
+  div.grid-panel {
+    display: inline-block;
+    min-width: 850px;
+  }
+  div.summary-item {
+    padding: 2px 5px;
+    height: 70px;
+    h4 {
+      text-align: left;
+      font-size: 14px;
+      font-weight: bold;
+      margin-top: 2px;
+    }
+    h4.day-only {
+      margin-top: 0;
+    }
+    h5 {
+      font-size: 11px;
+      color: theme-color("white");
+      text-align: left;
+      line-height: 18px;
+      white-space: nowrap;
+      margin-top: 20px;
+      font-style: italic;
+    }
+    h5.box {
+      padding: 2px 5px;
+    }
+    h5.box-gray {
+      background-color: theme-color("gray-strong");
+    }
+    h5.box-red {
+      background-color: red;
+    }
+    h5.box-green {
+      background-color: theme-color("success");
+    }
+  }
+  div.planig-grid-legend {
+    margin-top: 15px;
+    display: inline-block;
+    vertical-align: top;
+  }
+}

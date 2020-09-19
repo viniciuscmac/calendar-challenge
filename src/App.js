@@ -1,18 +1,11 @@
 import React from 'react';
-import { Card, CardHeader, CardBody } from 'reactstrap';
+import Calendar from './components/calendar/calendar';
 import './App.css';
 
 function App() {
   return (
     <div className="App">
-      <Card>
-        <CardHeader>
-          Calendar filters will be here
-        </CardHeader>
-        <CardBody>
-          Here it comes the calendar component
-        </CardBody>
-      </Card>
+      <Calendar />
     </div>
   );
 }
