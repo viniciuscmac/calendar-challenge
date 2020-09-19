@@ -1,0 +1,11 @@
+{
+    "extends": ["airbnb", "airbnb/hooks"],
+    "env": {
+        "browser": true,
+        "es6": true
+    },
+    "rules": {
+        "react/jsx-filename-extension": "off",
+        "react/jsx-one-expression-per-line": "off"
+    }
+}
