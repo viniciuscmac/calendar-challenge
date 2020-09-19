@@ -1,13 +1,6 @@
 import React from 'react';
-import _ from 'lodash';
 
 class BaseReactComponent extends React.Component {
-  getIconProcessing() {
-    return (
-      <i className="fa fa-spinner fa-spin" />
-    );
-  }
-
   getMonthsOptions() {
     return [
       { value: 1, label: 'January' },
@@ -32,17 +25,6 @@ class BaseReactComponent extends React.Component {
       { value: 2022, label: '2022' },
       { value: 2023, label: '2023' },
     ];
-  }
-
-  handleChange(name, value) {
-    return (event) => {
-      const setValue = value || (event ? this.getValueElement(event.target) : null);
-      this.setState({ [name]: setValue });
-    };
-  }
-
-  showError(message, error) {
-    console.log(message, error); //eslint-disable-line
   }
 }
 

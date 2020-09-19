@@ -4,23 +4,25 @@ div.planing {
   }
   div.grid-panel {
     display: inline-block;
-    min-width: 850px;
+    min-width: 900px;
+  }
+  div.summary-item-readonly {
+    h4 {
+      color: grey;
+    }
   }
   div.summary-item {
     padding: 2px 5px;
-    height: 70px;
+    height: 100px;
     h4 {
       text-align: left;
       font-size: 14px;
       font-weight: bold;
       margin-top: 2px;
     }
-    h4.day-only {
-      margin-top: 0;
-    }
     h5 {
       font-size: 11px;
-      color: theme-color("white");
+      color: white;
       text-align: left;
       line-height: 18px;
       white-space: nowrap;
@@ -31,18 +33,7 @@ div.planing {
       padding: 2px 5px;
     }
     h5.box-gray {
-      background-color: theme-color("gray-strong");
+      background-color: gray;
     }
-    h5.box-red {
-      background-color: red;
-    }
-    h5.box-green {
-      background-color: theme-color("success");
-    }
-  }
-  div.planig-grid-legend {
-    margin-top: 15px;
-    display: inline-block;
-    vertical-align: top;
   }
 }

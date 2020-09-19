@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import moment from 'moment';
 import _ from 'lodash';
 import CalendarFilter from './calendar.filter';
+import GridPanel from '../gridpanel/grid.panel';
 import './calendar.scss';
 
 class Calendar extends Component {
@@ -12,11 +13,7 @@ class Calendar extends Component {
 
   setInitialState() {
     this.state = {
-      showPlanningLaunch: false,
-      baseDate: new Date(),
-      HorariosDisponiveis: [],
-      DisciplinasDisponiveis: [],
-      CellSelected: [],
+      month: moment(),
     };
   }
 
@@ -26,64 +23,14 @@ class Calendar extends Component {
     };
   }
 
-  getPlaninSummary(month) {
-    const params = _.clone(this.props.filter);
-    params.Month = month.id;
-    return true;
-  }
-
-  async changeMonth(month) {
-    const newState = {
-      month: null,
-      planingSummary: [],
-    };
-    if (this.hasAllParams(month)) {
-      this.processing('grid_planing', true);
-      let planingSummary = await this.getPlaninSummary(month);
-      if (planingSummary && !_.isEmpty(planingSummary)) {
-        planingSummary = this.formatSummary(planingSummary);
-        newState.month = month;
-        newState.planingSummary = planingSummary;
-      }
-      this.processing('grid_planing', false);
-    }
-    this.setState(newState);
-  }
-
-  hasAllParams(month) {
-    const { filter } = this.props;
-    return !_.isEmpty(month)
-      && !_.isEmpty(filter.IdPLetivo.toString())
-      && !_.isEmpty(filter.IdUEnsino.toString())
-      && !_.isEmpty(filter.IdTurma.toString())
-      && !_.isEmpty(filter.IdDisciplina.toString())
-      && !_.isEmpty(filter.IdIAcademico.toString());
-  }
-
-  formatSummary(planingSummary) {
-    const summary = {};
-    _.forEach(planingSummary, (item) => {
-      const keys = _.keys(item);
-      _.forEach(keys, (key) => {
-        const config = item[key];
-        if (config) {
-          summary[config.Data] = config;
-        }
-      });
-    });
-    return summary;
-  }
-
   getHeader() {
     return moment.weekdaysShort();
   }
 
   getData() {
     let grid = [];
-    if (this.state.month) {
-      grid = this.createCalendarGrid();
-      this.createElements(grid);
-    }
+    grid = this.createCalendarGrid();
+    this.createElements(grid);
     return grid;
   }
 
@@ -96,10 +43,7 @@ class Calendar extends Component {
   }
 
   createElement(cell) {
-    cell.info = this.state.planingSummary[cell.date.format('DD/MM/YYYY')];
-    cell.className = _.get(cell, 'info.DiaLetivo') === 1 || _.get(cell, 'info.DiaLetivo') === 2 || _.get(cell, 'info.DiaLetivo') === 3 ? 'orange' : 'gray';
-    cell.className += _.get(cell, 'info.Parametro') === 'S' ? ' pointer' : '';
-    if (cell.info && !_.isEmpty(cell.info.Aulas)) {
+    if (cell.insideMonth) {
       this.createElementInfo(cell);
     } else {
       this.createEmptyElementInfo(cell);
@@ -107,18 +51,19 @@ class Calendar extends Component {
   }
 
   createElementInfo(cell) {
-    cell.className = cell.info.DiaLetivo === 1 || cell.info.DiaLetivo === 2 || cell.info.DiaLetivo === 3 ? 'green' : 'orange';
+    cell.className = 'green';
     cell.el = (
       <div className="summary-item">
         <h4>{cell.cellNumber}</h4>
-        <h5 className="summary-line box box-gray">{this.translate('planing.grid.cast_content')}</h5>
+        <h5 className="summary-line box box-gray">Day inside month</h5>
       </div>
     );
   }
 
   createEmptyElementInfo(cell) {
+    cell.className = 'gray';
     cell.el = (
-      <div className="summary-item">
+      <div className="summary-item summary-item-readonly">
         <h4>{cell.cellNumber}</h4>
       </div>
     );
@@ -127,8 +72,8 @@ class Calendar extends Component {
   createCalendarGrid() {
     const grid = [];
     let lastCell = null;
-    const startDate = moment(this.state.month.date).startOf('month');
-    const endDate = moment(this.state.month.date).endOf('month');
+    const startDate = moment(this.state.month).startOf('month');
+    const endDate = moment(this.state.month).endOf('month');
     for (let i = 0; i < 5; i++) {
       const line = [];
       for (let j = 0; j < 7; j++) {
@@ -153,32 +98,49 @@ class Calendar extends Component {
     const currentCell = line * 7 + column;
     let cellNumber = null;
     let calculated = null;
+    let insideMonth = true;
     if (currentCell < startCellIndex) {
       calculated = moment(startDate).subtract(startCellIndex - currentCell, 'days');
       cellNumber = calculated.date();
+      insideMonth = false;
     } else {
       calculated = moment(startDate).add(currentCell - startCellIndex, 'days');
       cellNumber = calculated.date();
+      if (calculated.month() > startDate.month()) {
+        insideMonth = false;
+      }
     }
     return {
       cellNumber,
       date: calculated,
+      insideMonth,
     };
   }
 
   createItem(startDate, line, column) {
-    const { cellNumber, date } = this.calculateCellNumber(startDate, line, column);
+    const { cellNumber, date, insideMonth } = this.calculateCellNumber(startDate, line, column);
     return {
       cellNumber,
       date,
+      insideMonth,
     };
+  }
+
+  reload(month, year) {
+    this.setState({ month: moment(`${year}-${month}-01`) });
   }
 
   render() {
     return (
       <div className="planing">
-        <CalendarFilter />
-
+        <CalendarFilter changeFilter={this.reload.bind(this)} />
+        <GridPanel
+          data={this.getData()}
+          header={this.getHeader()}
+          columnLabels={[]}
+          defaultLines={5}
+          loading={false}
+        />
       </div>
     );
   }

@@ -1,0 +1,43 @@
+div.grid-panel {
+  padding: 0px 10px 0px 0px;
+  table {
+    width: 100%;
+    margin: auto;
+    max-width: 1600px;
+    text-align: center;
+    border-collapse: separate;
+    td {
+      max-width: 30px;
+      min-width: 30px;
+    }
+    thead{
+      th {
+        font-weight: 100;
+        font-size: 14px;
+      }
+    }
+    .column-header, .header-empty {
+      width: 70px;
+      font-size: 14px;
+      font-weight: bold;
+    }
+    tbody {
+      td {
+        height: 75px;
+        cursor: pointer;
+        overflow-x: hidden;
+        border: 1px solid lightgray;
+      }
+      td.gray {
+        cursor: default;
+        background-color: lightgrey;
+      }
+      td.pointer {
+        cursor: pointer !important;
+      }
+      td.green {
+        background-color: forestgreen;
+      }
+    }
+  }
+}
