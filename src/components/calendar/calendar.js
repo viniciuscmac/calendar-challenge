@@ -4,6 +4,7 @@ import _ from 'lodash';
 import CalendarFilter from './calendar.filter';
 import GridPanel from '../gridpanel/grid.panel';
 import './calendar.scss';
+import ModalReminder from '../reminder/modal.reminder';
 
 class Calendar extends Component {
   constructor(props) {
@@ -14,6 +15,8 @@ class Calendar extends Component {
   setInitialState() {
     this.state = {
       month: moment(),
+      showModal: false,
+      dateSelected: moment(),
     };
   }
 
@@ -130,6 +133,20 @@ class Calendar extends Component {
     this.setState({ month: moment(`${year}-${month}-01`) });
   }
 
+  closeModal() {
+    this.setState({ showModal: false });
+  }
+
+  openModal(cell) {
+    if (cell && cell.insideMonth) {
+      this.setState({
+        title: `Reminder for ${cell.date.format('MM/DD/YYYY')}`,
+        dateSelected: cell.date,
+        showModal: true,
+      });
+    }
+  }
+
   render() {
     return (
       <div className="planing">
@@ -139,8 +156,16 @@ class Calendar extends Component {
           header={this.getHeader()}
           columnLabels={[]}
           defaultLines={5}
-          loading={false}
+          onSelect={this.openModal.bind(this)}
         />
+        {this.state.showModal
+          && (
+            <ModalReminder
+              title={this.state.title}
+              close={this.closeModal.bind(this)}
+              date={this.state.dateSelected}
+            />
+          )}
       </div>
     );
   }
