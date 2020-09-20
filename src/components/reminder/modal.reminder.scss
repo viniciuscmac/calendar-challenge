@@ -15,7 +15,62 @@
   label {
     display: block;
   }
+
+  input[type='checkbox'] {
+    width: 30px;
+    height: 30px;
+    margin-left: 0;
+  }
+
+  input[type='checkbox']{
+    width: 30px !important;
+    height: 30px !important;
+    margin: 5px;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -o-appearance: none;
+    appearance:none;
+    box-shadow: none;
+    font-size: 2em;
+  }
+
+  .graycheck {
+    background: gray;
+  }
+
+  .bluecheck {
+    background: blue;
+  }
+
+  .redcheck {
+    background: red;
+  }
+
+  .blackcheck {
+    background: black;
+  }
+
+  .orangecheck {
+    background: orange;
+  }
+
+   input[type='checkbox']:checked:after {
+     content: '\2713';
+     color: white;
+     position: absolute;
+     line-height: 1rem;
+     font-size: 1.7rem;
+     padding-left: 0.15rem;
+    }
   
+    .col-colors {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .nolabel {
+      height: 22px;
+    }
   /*!
    * 
    * antd v4.3.4

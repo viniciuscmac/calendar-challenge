@@ -63,11 +63,20 @@ class GridPanel extends BaseReactComponent {
   }
 
   createColumns(line, indexLine) {
-    return _.map(line, (column, indexColumn) => (
-      <td key={`cell-${indexLine}-${indexColumn}`} className={column.className} onMouseDown={this.onSelect(column)}>
-        {column.el}
-      </td>
-    ));
+    return _.map(line, (column, indexColumn) => {
+      if (column.haveContent) {
+        return (
+          <td key={`cell-${indexLine}-${indexColumn}`} className={column.className}>
+            {column.el}
+          </td>
+        );
+      }
+      return (
+        <td key={`cell-${indexLine}-${indexColumn}`} className={column.className} onMouseDown={this.onSelect(column)}>
+          {column.el}
+        </td>
+      );
+    });
   }
 
   onSelect(column) {

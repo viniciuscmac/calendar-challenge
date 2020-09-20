@@ -17,6 +17,7 @@ class Calendar extends Component {
       month: moment(),
       showModal: false,
       dateSelected: moment(),
+      reminders: [],
     };
   }
 
@@ -54,13 +55,49 @@ class Calendar extends Component {
   }
 
   createElementInfo(cell) {
+    const reminders = _.filter(this.state.reminders, (aux) => aux.day.format('MM/DD/yyyy') === cell.date.format('MM/DD/yyyy'));
     cell.className = 'green';
+    if (reminders.length > 0) {
+      cell.haveContent = true;
+    }
     cell.el = (
       <div className="summary-item">
-        <h4>{cell.cellNumber}</h4>
-        <h5 className="summary-line box box-gray">Day inside month</h5>
+        <div className="summary-header">
+          <h4>{cell.cellNumber}</h4>
+          <i className="fa fa-plus-circle fa-2x" role="contentinfo" onClick={this.openModal.bind(this, cell)} />
+        </div>
+        {this.getReminders(reminders)}
       </div>
     );
+  }
+
+  getReminders(reminders) {
+    if (!_.isEmpty(reminders)) {
+      return _.map(reminders, (value) => (
+        <h5
+          className={this.getColor(value.color)}
+          onClick={this.openModalEdit.bind(this, value)}
+        >
+          {value.description} - {value.city} - {value.weather}
+        </h5>
+      ));
+    }
+    return null;
+  }
+
+  getColor(color) {
+    switch (color) {
+      case 0:
+        return 'summary-line box box-gray';
+      case 1:
+        return 'summary-line box box-blue';
+      case 2:
+        return 'summary-line box box-red';
+      case 3:
+        return 'summary-line box box-black';
+      default:
+        return 'summary-line box box-gray';
+    }
   }
 
   createEmptyElementInfo(cell) {
@@ -147,6 +184,25 @@ class Calendar extends Component {
     }
   }
 
+  openModalEdit(reminder) {
+    console.log(reminder);
+  }
+
+  saveReminder(content) {
+    const tempState = this.state;
+    tempState.reminders.push({
+      id: tempState.reminders.length,
+      description: content.reminder,
+      time: moment(content.time),
+      day: content.time.startOf('day'),
+      city: content.city,
+      weather: '',
+      color: content.color,
+    });
+    tempState.showModal = false;
+    this.setState({ tempState });
+  }
+
   render() {
     return (
       <div className="planing">
@@ -164,6 +220,7 @@ class Calendar extends Component {
               title={this.state.title}
               close={this.closeModal.bind(this)}
               date={this.state.dateSelected}
+              save={this.saveReminder.bind(this)}
             />
           )}
       </div>

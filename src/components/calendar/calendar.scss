@@ -4,16 +4,21 @@ div.planing {
   }
   div.grid-panel {
     display: inline-block;
-    min-width: 900px;
+    min-width: 1110px;
+    margin: auto;
   }
   div.summary-item-readonly {
     h4 {
       color: grey;
     }
   }
+  div.summary-header {
+    display: flex;
+    justify-content: space-between;
+  }
   div.summary-item {
     padding: 2px 5px;
-    height: 100px;
+    height: 120px;
     h4 {
       text-align: left;
       font-size: 14px;
@@ -21,12 +26,9 @@ div.planing {
       margin-top: 2px;
     }
     h5 {
-      font-size: 11px;
+      font-size: 10px;
       color: white;
       text-align: left;
-      line-height: 18px;
-      white-space: nowrap;
-      margin-top: 20px;
       font-style: italic;
     }
     h5.box {
@@ -35,5 +37,18 @@ div.planing {
     h5.box-gray {
       background-color: gray;
     }
+    h5.box-blue {
+      background-color: blue;
+    }
+    h5.box-red {
+      background-color: red;
+    }
+    h5.box-black {
+      background-color: black;
+    }
   }
+}
+
+.fa-2x {
+  font-size: 1.5em;
 }
