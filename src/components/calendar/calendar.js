@@ -68,8 +68,8 @@ class Calendar extends Component {
       <div className="summary-item">
         <div className="summary-header">
           <h4>{cell.cellNumber}</h4>
-          <i className="fa fa-plus-circle fa-2x" role="contentinfo" onClick={this.openModal.bind(this, cell)} />
-          <i className="fa fa-times-circle fa-2x" role="contentinfo" onClick={this.openModalConfirmation.bind(this, cell)} />
+          <i data-cy={`openmodal-${cell.cellNumber}`} className="fa fa-plus-circle fa-2x" role="contentinfo" onClick={this.openModal.bind(this, cell)} />
+          <i data-cy={`openmodalexclude-${cell.cellNumber}`} className="fa fa-times-circle fa-2x" role="contentinfo" onClick={this.openModalConfirmation.bind(this, cell)} />
         </div>
         {this.getReminders(reminders)}
       </div>
@@ -80,6 +80,7 @@ class Calendar extends Component {
     if (!_.isEmpty(reminders)) {
       return _.map(reminders, (value) => (
         <h5
+          data-cy={`reminder-${value.id}`}
           className={this.getColor(value.color)}
           onClick={this.openModalEdit.bind(this, value)}
         >

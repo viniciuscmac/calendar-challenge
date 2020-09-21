@@ -101,6 +101,7 @@ class ModalReminder extends BaseReactComponent {
             <Col sm={12}>
               <Label>Reminder</Label>
               <Input
+                data-cy="reminder-field"
                 type="text"
                 value={this.state.reminder}
                 onChange={this.handleChange('reminder')}
@@ -112,6 +113,7 @@ class ModalReminder extends BaseReactComponent {
             <Col md="4">
               <Label>Time</Label>
               <TimePicker
+                data-cy="time-field"
                 format={format}
                 value={this.state.time}
                 onChange={this.changeHour.bind(this)}
@@ -120,6 +122,7 @@ class ModalReminder extends BaseReactComponent {
             <Col md="4">
               <Label>City</Label>
               <Input
+                data-cy="city-field"
                 value={this.state.city}
                 onChange={this.handleChange('city')}
               />
@@ -127,6 +130,7 @@ class ModalReminder extends BaseReactComponent {
             <Col md="1">
               <Label>Color</Label>
               <Input
+                data-cy="color-field-gray"
                 type="checkbox"
                 className="graycheck"
                 checked={this.state.color === 0}
@@ -136,6 +140,7 @@ class ModalReminder extends BaseReactComponent {
             <Col md="1">
               <Label className="nolabel" />
               <Input
+                data-cy="color-field-blue"
                 type="checkbox"
                 className="bluecheck"
                 checked={this.state.color === 1}
@@ -145,6 +150,7 @@ class ModalReminder extends BaseReactComponent {
             <Col md="1">
               <Label className="nolabel" />
               <Input
+                data-cy="color-field-red"
                 type="checkbox"
                 className="redcheck"
                 checked={this.state.color === 2}
@@ -154,6 +160,7 @@ class ModalReminder extends BaseReactComponent {
             <Col md="1">
               <Label className="nolabel" />
               <Input
+                data-cy="color-field-black"
                 type="checkbox"
                 className="blackcheck"
                 checked={this.state.color === 3}
@@ -165,9 +172,9 @@ class ModalReminder extends BaseReactComponent {
         <ModalFooter>
           <Button className="btn btn-primary" onClick={close.bind(this)}>Back</Button>
           {this.state.id > 0 && (
-            <Button className="btn btn-danger" onClick={this.openConfirmation.bind(this)}>Delete</Button>
+            <Button data-cy="btn-delete-reminder" className="btn btn-danger" onClick={this.openConfirmation.bind(this)}>Delete</Button>
           )}
-          <Button className="btn btn-success" onClick={this.save.bind(this)}>Save</Button>
+          <Button data-cy="btn-save-reminder" className="btn btn-success" onClick={this.save.bind(this)}>Save</Button>
         </ModalFooter>
         {this.state.showModalConfirmation && (
           <ModalConfirmation

@@ -17,8 +17,8 @@ class ModalConfirmation extends BaseReactComponent {
           {message}
         </ModalBody>
         <ModalFooter>
-          <Button className="btn btn-primary" onClick={close.bind(this)}>No</Button>
-          <Button className="btn btn-success" onClick={save.bind(this)}>Yes</Button>
+          <Button data-cy="confirmation-no" className="btn btn-primary" onClick={close.bind(this)}>No</Button>
+          <Button data-cy="confirmation-yes" className="btn btn-success" onClick={save.bind(this)}>Yes</Button>
         </ModalFooter>
       </Modal>
     );
