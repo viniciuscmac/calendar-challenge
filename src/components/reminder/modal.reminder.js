@@ -6,6 +6,7 @@ import moment from 'moment';
 import { TimePicker } from 'antd';
 import { toast } from 'react-toastify';
 import BaseReactComponent from '../../utils/base.react.component';
+import ModalConfirmation from '../confirmation/modal.confirmation';
 import './modal.reminder.scss';
 
 class ModalReminder extends BaseReactComponent {
@@ -21,7 +22,21 @@ class ModalReminder extends BaseReactComponent {
       reminder: '',
       city: '',
       color: '',
+      id: 0,
+      showModalConfirmation: false,
     };
+  }
+
+  componentWillMount() {
+    if (this.props.reminder.id && this.props.reminder.id > 0) {
+      this.setState({
+        time: this.props.reminder.time,
+        reminder: this.props.reminder.description,
+        city: this.props.reminder.city,
+        color: this.props.reminder.color,
+        id: this.props.reminder.id,
+      });
+    }
   }
 
   changeHour(time, timeString) {
@@ -45,10 +60,6 @@ class ModalReminder extends BaseReactComponent {
       toast.error('Reminder can\'t be empty.');
       return false;
     }
-    if (this.state.time === this.props.date) {
-      toast.error('Please select a time.');
-      return false;
-    }
     if (this.state.city === '') {
       toast.error('City can\'t be empty.');
       return false;
@@ -66,9 +77,22 @@ class ModalReminder extends BaseReactComponent {
     }
   }
 
+  delete() {
+    this.setState({ showModalConfirmation: false });
+    this.props.delete(this.state);
+  }
+
+  closeConfirmation() {
+    this.setState({ showModalConfirmation: false });
+  }
+
+  openConfirmation() {
+    this.setState({ showModalConfirmation: true });
+  }
+
   render() {
     const { close, title } = this.props;
-    const format = 'hh:mm';
+    const format = 'H:mm';
     return (
       <Modal isOpen className="modal-lg">
         <ModalHeader>{title}</ModalHeader>
@@ -89,6 +113,7 @@ class ModalReminder extends BaseReactComponent {
               <Label>Time</Label>
               <TimePicker
                 format={format}
+                value={this.state.time}
                 onChange={this.changeHour.bind(this)}
               />
             </Col>
@@ -139,8 +164,19 @@ class ModalReminder extends BaseReactComponent {
         </ModalBody>
         <ModalFooter>
           <Button className="btn btn-primary" onClick={close.bind(this)}>Back</Button>
+          {this.state.id > 0 && (
+            <Button className="btn btn-danger" onClick={this.openConfirmation.bind(this)}>Delete</Button>
+          )}
           <Button className="btn btn-success" onClick={this.save.bind(this)}>Save</Button>
         </ModalFooter>
+        {this.state.showModalConfirmation && (
+          <ModalConfirmation
+            title="Confirmation"
+            message="Are you sure you want to delete this reminder ?"
+            save={this.delete.bind(this)}
+            close={this.closeConfirmation.bind(this)}
+          />
+        )}
       </Modal>
     );
   }

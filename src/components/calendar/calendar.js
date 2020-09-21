@@ -5,6 +5,8 @@ import CalendarFilter from './calendar.filter';
 import GridPanel from '../gridpanel/grid.panel';
 import './calendar.scss';
 import ModalReminder from '../reminder/modal.reminder';
+import ModalConfirmation from '../confirmation/modal.confirmation';
+import { getWeather } from '../../actions/weather.actions';
 
 class Calendar extends Component {
   constructor(props) {
@@ -16,8 +18,10 @@ class Calendar extends Component {
     this.state = {
       month: moment(),
       showModal: false,
+      showModalConfirmation: false,
       dateSelected: moment(),
       reminders: [],
+      reminderSelected: {},
     };
   }
 
@@ -65,6 +69,7 @@ class Calendar extends Component {
         <div className="summary-header">
           <h4>{cell.cellNumber}</h4>
           <i className="fa fa-plus-circle fa-2x" role="contentinfo" onClick={this.openModal.bind(this, cell)} />
+          <i className="fa fa-times-circle fa-2x" role="contentinfo" onClick={this.openModalConfirmation.bind(this, cell)} />
         </div>
         {this.getReminders(reminders)}
       </div>
@@ -78,7 +83,9 @@ class Calendar extends Component {
           className={this.getColor(value.color)}
           onClick={this.openModalEdit.bind(this, value)}
         >
-          {value.description} - {value.city} - {value.weather}
+          <p>{value.description}</p>
+          <p>City: {value.city}</p>
+          <p>Weather: {value.weather}</p>
         </h5>
       ));
     }
@@ -171,7 +178,7 @@ class Calendar extends Component {
   }
 
   closeModal() {
-    this.setState({ showModal: false });
+    this.setState({ reminderSelected: {}, showModal: false });
   }
 
   openModal(cell) {
@@ -184,22 +191,63 @@ class Calendar extends Component {
     }
   }
 
-  openModalEdit(reminder) {
-    console.log(reminder);
+  openModalConfirmation(cell) {
+    if (cell && cell.insideMonth) {
+      this.setState({
+        reminderSelected: cell,
+        showModalConfirmation: true,
+      });
+    }
   }
 
-  saveReminder(content) {
+  openModalEdit(reminder) {
+    this.setState({
+      reminderSelected: reminder,
+      showModal: true,
+    });
+  }
+
+  deleteOne(content) {
     const tempState = this.state;
+    if (content.id > 0) {
+      tempState.reminders = _.filter(tempState.reminders, (aux) => aux.id !== content.id);
+    }
+    tempState.reminderSelected = {};
+    tempState.showModal = false;
+    this.setState({ tempState });
+  }
+
+  async saveReminder(content) {
+    const tempState = this.state;
+    if (content.id > 0) {
+      tempState.reminders = _.filter(tempState.reminders, (aux) => aux.id !== content.id);
+    }
+    const weatherResponse = await getWeather(content.city);
+
     tempState.reminders.push({
-      id: tempState.reminders.length,
+      id: tempState.reminders.length + 1,
       description: content.reminder,
       time: moment(content.time),
       day: content.time.startOf('day'),
       city: content.city,
-      weather: '',
+      weather: weatherResponse ? weatherResponse.weather[0].main : 'No weather available.',
       color: content.color,
     });
+    tempState.reminderSelected = {};
     tempState.showModal = false;
+    this.setState({ tempState });
+  }
+
+  closeConfirmarion() {
+    this.setState({ reminderSelected: {}, showModalConfirmation: false });
+  }
+
+  deleteReminders() {
+    const tempState = this.state;
+    tempState.reminders = _.filter(tempState.reminders,
+      (aux) => aux.day.format('MM/DD/yyyy') !== this.state.reminderSelected.date.format('MM/DD/yyyy'));
+    tempState.reminderSelected = {};
+    tempState.showModalConfirmation = false;
     this.setState({ tempState });
   }
 
@@ -221,8 +269,18 @@ class Calendar extends Component {
               close={this.closeModal.bind(this)}
               date={this.state.dateSelected}
               save={this.saveReminder.bind(this)}
+              delete={this.deleteOne.bind(this)}
+              reminder={this.state.reminderSelected}
             />
           )}
+        {this.state.showModalConfirmation && (
+          <ModalConfirmation
+            title="Confirmation"
+            message="Are you sure you want to delete all reminders for the day ?"
+            save={this.deleteReminders.bind(this)}
+            close={this.closeConfirmarion.bind(this)}
+          />
+        )}
       </div>
     );
   }

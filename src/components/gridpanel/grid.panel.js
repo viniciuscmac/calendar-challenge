@@ -72,7 +72,7 @@ class GridPanel extends BaseReactComponent {
         );
       }
       return (
-        <td key={`cell-${indexLine}-${indexColumn}`} className={column.className} onMouseDown={this.onSelect(column)}>
+        <td key={`cell-${indexLine}-${indexColumn}`} className={column.className}>
           {column.el}
         </td>
       );

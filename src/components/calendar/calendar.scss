@@ -19,6 +19,9 @@ div.planing {
   div.summary-item {
     padding: 2px 5px;
     height: 120px;
+    p {
+      margin-bottom: 0;
+    }
     h4 {
       text-align: left;
       font-size: 14px;
@@ -27,6 +30,7 @@ div.planing {
     }
     h5 {
       font-size: 10px;
+      cursor: pointer;
       color: white;
       text-align: left;
       font-style: italic;
@@ -51,4 +55,5 @@ div.planing {
 
 .fa-2x {
   font-size: 1.5em;
+  cursor: pointer;
 }
