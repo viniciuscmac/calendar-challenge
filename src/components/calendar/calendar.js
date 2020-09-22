@@ -78,7 +78,7 @@ class Calendar extends Component {
 
   getReminders(reminders) {
     if (!_.isEmpty(reminders)) {
-      return _.map(reminders, (value) => (
+      return _.map(_.sortBy(reminders, ['time']), (value) => (
         <h5
           data-cy={`reminder-${value.id}`}
           className={this.getColor(value.color)}
